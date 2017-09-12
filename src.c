@@ -2,6 +2,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 
 
 int main(int  argc, char ** argv){
@@ -20,7 +21,8 @@ int main(int  argc, char ** argv){
 		switch(c){
 			case 'i':
 				iflag = 1;
-				input_file = optarg;
+				input_file = malloc(strlen(optarg)+1);
+				strcpy(input_file,optarg);
 				break;
 			case 'n':
 				nflag = 1;
@@ -32,7 +34,8 @@ int main(int  argc, char ** argv){
 				break;
 			case 'p':
 				pflag = 1;
-				cadena_a_buscar = optarg;
+				cadena_a_buscar = malloc(strlen(optarg)+1);
+				strcpy(cadena_a_buscar,optarg);
 				break;
 			case 'd':
 				dflag = 1;
@@ -83,5 +86,7 @@ int main(int  argc, char ** argv){
 	/*
 		Procesamiento
 	*/
+	free(input_file);
+	free(cadena_a_buscar);
 	return 0;
 }
