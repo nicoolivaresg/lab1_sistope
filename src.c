@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include "funciones_src.h"
 
 
 int main(int  argc, char ** argv){
@@ -40,16 +41,6 @@ int main(int  argc, char ** argv){
 			case 'd':
 				dflag = 1;
 				break;
-			/*	
-			case 'b':
-				nflag =1;
-				sscanf(optarg,"%d",&bflag);
-				fprintf(stderr, "%s\n", optarg);
-				break;
-			case 'c':
-				cvalue = optarg;
-				break;
-			*/
 			case '?':
 				if(optopt == 'i'){
 					fprintf(stderr, "Opcion -%c requiere un argumento.\n", optopt);
@@ -90,3 +81,4 @@ int main(int  argc, char ** argv){
 	free(cadena_a_buscar);
 	return 0;
 }
+
