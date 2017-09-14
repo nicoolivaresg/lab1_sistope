@@ -1,7 +1,8 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "funciones_comparador.h"
+#include "comparador.h"
+/*
+	IMPLEMENTACIÓN DE FUNCIONES COMPARADOR (comparador.h)
+*/
 
-int main(int argc, char * argv[]){
-	
+int procesar_archivo(char * cadena){
+	return 1;
 }
