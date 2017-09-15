@@ -14,4 +14,8 @@
 
 int calcularLineas(FILE* archivo, int letras_en_linea);
 
+pid_t createProcess(int identificador, char* input_file, int offset, int lineas_proceso, char* cadena_a_buscar);
+
+char* int_to_string(int number);
+
 #endif

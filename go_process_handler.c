@@ -79,12 +79,14 @@ int main(int  argc, char ** argv){
 	if(archivo == NULL) {
 		printf("El archivo %s no existe, ejecute el programa con un archivo existente\n", input_file);
 	}
+	char ch;
 	int i;
-	int lineas_totales, lineas_por_proceso, lineas_restantes;
+	int lineas_totales, lineas_por_proceso, lineas_restantes, posicion_cursor = 0;
 	lineas_totales = calcularLineas(archivo, cantidad_caracteres_en_linea);
 	lineas_por_proceso = (int)ceil((float)lineas_totales / numero_procesos_comparador);
 	lineas_restantes = lineas_totales;
 
+	fseek(archivo, 0, SEEK_SET);
 	for (int i = 0; i < numero_procesos_comparador; ++i)
 	{
 		int lineas_proceso = lineas_por_proceso;
@@ -92,14 +94,25 @@ int main(int  argc, char ** argv){
 			lineas_proceso = lineas_restantes;
 		}
 
-		//execlp("comparador", "comparador", "-d", i+1, "-i", input_file, "-o", posicion_cursor,
-		//		"-l", lineas_proceso, "-p", cadena_a_buscar, (char *)NULL);
-
+		createProcess(i+1, input_file, posicion_cursor, lineas_proceso, cadena_a_buscar);
 
 		lineas_restantes -= lineas_proceso;
+		printf("%d\n", lineas_restantes);
 		if(lineas_restantes == 0) {
 			break;
 		}
+
+		// obtener la siguiente posicion del cursor en el archivo.
+		int lineas_aux = 0;
+		while((ch = (char)getc(archivo)) != EOF) {
+			if(ch == '\n') {
+				lineas_aux++;
+			}
+			if(lineas_aux == lineas_proceso) {
+				break;
+			}
+		}
+		posicion_cursor = ftell(archivo);
 	}
 
 	/*
