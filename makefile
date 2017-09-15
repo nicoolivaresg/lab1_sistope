@@ -2,8 +2,8 @@ CC=gcc
 route=
 
 all: go_process_handler.o process_handler.o go_comparador.o comparador.o
-	@$(CC) go_process_handler.o process_handler.o -o handler -Wall -I.
-	@$(CC) go_comparador.o comparador.o -o comparador -Wall -I.
+	@$(CC) go_process_handler.o process_handler.o -o handler -Wall -lm -I.
+	@$(CC) go_comparador.o comparador.o -o comparador -Wall -lm -I.
 	@rm go_process_handler.o process_handler.o go_comparador.o comparador.o
 	@clear
 	@echo "Compilación terminada"

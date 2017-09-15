@@ -1,9 +1,5 @@
-#include <stdio.h>
-#include <ctype.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
 #include "process_handler.h"
+#include <math.h>
 
 
 int main(int  argc, char ** argv){
@@ -27,11 +23,13 @@ int main(int  argc, char ** argv){
 				break;
 			case 'n':
 				nflag = 1;
-				numero_procesos_comparador = atoi(optarg);
+				sscanf(optarg, "%d", &numero_procesos_comparador);
+				//numero_procesos_comparador = atoi(optarg);
 				break;
 			case 'c':
 				cflag = 1;
-				cantidad_caracteres_en_linea =atoi(optarg);
+				sscanf(optarg, "%d", &cantidad_caracteres_en_linea);
+				//cantidad_caracteres_en_linea =atoi(optarg);
 				break;
 			case 'p':
 				pflag = 1;
@@ -77,6 +75,40 @@ int main(int  argc, char ** argv){
 	/*
 		Procesamiento
 	*/
+	FILE* archivo = fopen(input_file, "r");
+	if(archivo == NULL) {
+		printf("El archivo %s no existe, ejecute el programa con un archivo existente\n", input_file);
+	}
+	int i;
+	int lineas_totales, lineas_por_proceso, lineas_restantes;
+	lineas_totales = calcularLineas(archivo, cantidad_caracteres_en_linea);
+	lineas_por_proceso = (int)ceil((float)lineas_totales / numero_procesos_comparador);
+	lineas_restantes = lineas_totales;
+
+	for (int i = 0; i < numero_procesos_comparador; ++i)
+	{
+		int lineas_proceso = lineas_por_proceso;
+		if(lineas_restantes - lineas_proceso < 0) {
+			lineas_proceso = lineas_restantes;
+		}
+
+		//execlp("comparador", "comparador", "-d", i+1, "-i", input_file, "-o", posicion_cursor,
+		//		"-l", lineas_proceso, "-p", cadena_a_buscar, (char *)NULL);
+
+
+		lineas_restantes -= lineas_proceso;
+		if(lineas_restantes == 0) {
+			break;
+		}
+	}
+
+	/*
+		Escribir resultados en un archivo.
+	*/
+
+
+
+
 	free(input_file);
 	free(cadena_a_buscar);
 	return 0;
