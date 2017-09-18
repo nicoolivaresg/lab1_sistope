@@ -60,6 +60,12 @@ int main(int  argc, char ** argv){
 	}
 	// Comprobar que el largo de la cadena a buscar es menor o igual al largo
 	// de cada linea
+	if(strlen(cadena_a_buscar) > cantidad_caracteres_en_linea) {
+		printf("El largo de la cadena que se quiere buscar es 
+			mayor a la cantidad de caracteres que hay en cada 
+			linea, por favor pruebe con otra cadena\n");
+		return 1;
+	}
 
 	/*
 		Prueba de paso de argumentos por línea de comandos
@@ -82,6 +88,7 @@ int main(int  argc, char ** argv){
 	FILE* archivo = fopen(input_file, "r");
 	if(archivo == NULL) {
 		printf("El archivo %s no existe, ejecute el programa con un archivo existente\n", input_file);
+		return 1;
 	}
 	char ch; int i;
 	pid_t* procesos_hijos;
@@ -101,12 +108,11 @@ int main(int  argc, char ** argv){
 		procesos_hijos[i] = createProcess(i+1, input_file, posicion_cursor, lineas_proceso, cadena_a_buscar);
 
 		lineas_restantes -= lineas_proceso;
-		//printf("%d\n", lineas_restantes);
 		if(lineas_restantes == 0) {
 			break;
 		}
 
-		// obtener la siguiente posicion del cursor en el archivo.
+		// Obtener la siguiente posicion del cursor en el archivo.
 		int lineas_aux = 0;
 		while((ch = (char)getc(archivo)) != EOF) {
 			if(ch == '\n') {
