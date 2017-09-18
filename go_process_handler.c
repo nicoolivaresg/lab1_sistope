@@ -58,10 +58,13 @@ int main(int  argc, char ** argv){
 				abort();
 		}
 	}
+	// Comprobar que el largo de la cadena a buscar es menor o igual al largo
+	// de cada linea
+
 	/*
 		Prueba de paso de argumentos por línea de comandos
 	*/
-	printf("iflag = %d, nflag = %d, cflag = %d, pflag = %d, dflag = %d\n", iflag, nflag, cflag, pflag, dflag);
+	/*printf("iflag = %d, nflag = %d, cflag = %d, pflag = %d, dflag = %d\n", iflag, nflag, cflag, pflag, dflag);
 	printf("Archivo de entrada: %s\nNumero de procesos ha crear: %d\nCantidad de caracteres por linea: %d\nCadena ha comparar: %s\nImprime por pantalla: %s\n", 
 		input_file,
 		numero_procesos_comparador,
@@ -69,7 +72,8 @@ int main(int  argc, char ** argv){
 		cadena_a_buscar,
 		dflag ? "Si":"No"
 		);
-	/* 
+	*/
+	/*
 		Hasta acá 
 	*/
 	/*
@@ -79,14 +83,14 @@ int main(int  argc, char ** argv){
 	if(archivo == NULL) {
 		printf("El archivo %s no existe, ejecute el programa con un archivo existente\n", input_file);
 	}
-	char ch;
-	int i;
+	char ch; int i;
+	pid_t* procesos_hijos;
 	int lineas_totales, lineas_por_proceso, lineas_restantes, posicion_cursor = 0;
 	lineas_totales = calcularLineas(archivo, cantidad_caracteres_en_linea);
 	lineas_por_proceso = (int)ceil((float)lineas_totales / numero_procesos_comparador);
 	lineas_restantes = lineas_totales;
+	procesos_hijos = (pid_t*)calloc(numero_procesos_comparador, sizeof(int));
 
-	fseek(archivo, 0, SEEK_SET);
 	for (int i = 0; i < numero_procesos_comparador; ++i)
 	{
 		int lineas_proceso = lineas_por_proceso;
@@ -94,10 +98,10 @@ int main(int  argc, char ** argv){
 			lineas_proceso = lineas_restantes;
 		}
 
-		createProcess(i+1, input_file, posicion_cursor, lineas_proceso, cadena_a_buscar);
+		procesos_hijos[i] = createProcess(i+1, input_file, posicion_cursor, lineas_proceso, cadena_a_buscar);
 
 		lineas_restantes -= lineas_proceso;
-		printf("%d\n", lineas_restantes);
+		//printf("%d\n", lineas_restantes);
 		if(lineas_restantes == 0) {
 			break;
 		}
@@ -119,9 +123,36 @@ int main(int  argc, char ** argv){
 		Escribir resultados en un archivo.
 	*/
 
+	// Esperar que terminen todos los procesos creados.
+	for (int i = 0; i < numero_procesos_comparador; ++i)
+	{
+		waitpid(procesos_hijos[i], NULL, 0);
+	}
 
+	int caracteres_por_proceso = (lineas_por_proceso) * (cantidad_caracteres_en_linea + 1);
+	char* buffer = (char*)malloc(caracteres_por_proceso + 1);
+	char* nombre_archivo_completo = getRcName(cadena_a_buscar);
+	FILE* resultados_completos = fopen(nombre_archivo_completo, "w");
+	for (int i = 1; i <= numero_procesos_comparador; ++i)
+	{
+		char* nombre_archivo_parcial = getRpName(cadena_a_buscar, i);
+		FILE* resultado_parcial = fopen(nombre_archivo_parcial, "r");
 
+		fread(buffer, caracteres_por_proceso + 1, 1, resultado_parcial);
+		fwrite(buffer, caracteres_por_proceso + 1, 1, resultados_completos);
+		if(dflag == 1) {
+			printf("%s", buffer);
+		}
 
+		fclose(resultado_parcial);
+		free(nombre_archivo_parcial);
+	}
+	free(buffer);
+	fclose(resultados_completos);
+	free(nombre_archivo_completo);
+	
+
+	free(procesos_hijos);
 	free(input_file);
 	free(cadena_a_buscar);
 	return 0;

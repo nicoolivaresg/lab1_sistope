@@ -4,12 +4,11 @@
 #ifndef _COMPARADOR_H
 #define _COMPARADOR_H
 
-#include <stdio.h>
-#include <stdlib.h>
+#include "util.h"
 #include <unistd.h>
-#include <string.h>
-#include <ctype.h>
 
-int procesar_archivo(char * cadena);
+int checkLine(FILE* input_file, char* dna_chain);
+
+void writeResults(int* results, char* output_file_name, FILE* input_file, int offset, int lines);
 
 #endif

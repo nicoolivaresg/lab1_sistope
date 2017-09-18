@@ -3,7 +3,7 @@
 
 int main(int argc, char * argv[]){
 	int identificador = 0, offset = 0, lineas = 0;
-	char* input_file = NULL;
+	char* input_file_name = NULL;
 	char* cadena_a_buscar = NULL;
 
 	int c;
@@ -14,8 +14,8 @@ int main(int argc, char * argv[]){
 				sscanf(optarg, "%d", &identificador);
 				break;
 			case 'i':
-				input_file = malloc(strlen(optarg)+1);
-				strcpy(input_file,optarg);
+				input_file_name = malloc(strlen(optarg)+1);
+				strcpy(input_file_name,optarg);
 				break;
 			case 'o':
 				sscanf(optarg, "%d", &offset);
@@ -48,16 +48,33 @@ int main(int argc, char * argv[]){
 				abort();
 		}
 	}
+	/*
 	printf("Identificador: %d\nArchivo de entrada: %s\nOffset: %d\nLineas ha comparar: %d\nCadena ha comparar: %s\n", 
 		identificador,
-		input_file,
+		input_file_name,
 		offset,
 		lineas,
 		cadena_a_buscar
 		);
+	*/
 
-	printf("%s\n",procesar_archivo("AAAA")?"SI":"NO");
+	// Comienza el procesamiento de la parte que tiene que comparar este proceso
 
+	int* results = (int*)calloc(lineas, sizeof(*results));
+	FILE* input_file = fopen(input_file_name, "r");
+	fseek(input_file, offset, SEEK_SET);
+
+	for (int i = 0; i < lineas; ++i)
+	{
+		results[i] = checkLine(input_file, cadena_a_buscar);
+	}
+
+	char* output_file_name = getRpName(cadena_a_buscar, identificador);
+	writeResults(results, output_file_name, input_file, offset, lineas);
+
+	free(output_file_name);
+	free(input_file_name);
+	free(cadena_a_buscar);
 	return 0;
 }
 
