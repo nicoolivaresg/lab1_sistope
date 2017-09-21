@@ -61,9 +61,7 @@ int main(int  argc, char ** argv){
 	// Comprobar que el largo de la cadena a buscar es menor o igual al largo
 	// de cada linea
 	if(strlen(cadena_a_buscar) > cantidad_caracteres_en_linea) {
-		printf("El largo de la cadena que se quiere buscar es 
-			mayor a la cantidad de caracteres que hay en cada 
-			linea, por favor pruebe con otra cadena\n");
+		printf("El largo de la cadena que se quiere buscar es mayor a la cantidad de caracteres que hay en cada linea, por favor pruebe con otra cadena\n");
 		return 1;
 	}
 
@@ -143,6 +141,9 @@ int main(int  argc, char ** argv){
 	{
 		char* nombre_archivo_parcial = getRpName(cadena_a_buscar, i);
 		FILE* resultado_parcial = fopen(nombre_archivo_parcial, "r");
+		if(resultado_parcial == NULL) {
+			continue;
+		}
 
 		fread(buffer, caracteres_por_proceso + 1, 1, resultado_parcial);
 		fwrite(buffer, caracteres_por_proceso + 1, 1, resultados_completos);
