@@ -133,7 +133,7 @@ int main(int  argc, char ** argv){
 		waitpid(procesos_hijos[i], NULL, 0);
 	}
 
-	int caracteres_por_proceso = (lineas_por_proceso) * (cantidad_caracteres_en_linea + 1);
+	int caracteres_por_proceso = (lineas_por_proceso) * (cantidad_caracteres_en_linea + 3 + 1);
 	char* buffer = (char*)malloc(caracteres_por_proceso + 1);
 	char* nombre_archivo_completo = getRcName(cadena_a_buscar);
 	FILE* resultados_completos = fopen(nombre_archivo_completo, "w");
@@ -146,7 +146,7 @@ int main(int  argc, char ** argv){
 		}
 
 		fread(buffer, caracteres_por_proceso + 1, 1, resultado_parcial);
-		fwrite(buffer, caracteres_por_proceso + 1, 1, resultados_completos);
+		fwrite(buffer, strlen(buffer), 1, resultados_completos);
 		if(dflag == 1) {
 			printf("%s", buffer);
 		}
