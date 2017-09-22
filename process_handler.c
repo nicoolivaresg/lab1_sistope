@@ -18,6 +18,24 @@ int calcularLineas(FILE* archivo, int letras_en_linea)
 	return (int)(caracteres / letras_en_linea);
 }
 
+int calcularCaracteresRealesEnLinea(FILE* archivo)
+{
+	long int caracteres = 0;
+	char letter = 0;
+	fseek(archivo, 0, SEEK_SET);
+	while(fscanf(archivo, "%c", &letter) == 1) {
+		if(letter != '\n') {
+			caracteres++;
+		}else{
+			fseek(archivo, 0, SEEK_SET);
+			return (int)caracteres;
+		}
+	}
+
+	fseek(archivo, 0, SEEK_SET);
+	return (int)caracteres;
+}
+
 pid_t createProcess(int identificador, char* input_file, int offset, int lineas_proceso, char* cadena_a_buscar)
 {
 	pid_t pid = fork();

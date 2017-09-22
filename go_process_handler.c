@@ -64,7 +64,6 @@ int main(int  argc, char ** argv){
 		printf("El largo de la cadena que se quiere buscar es mayor a la cantidad de caracteres que hay en cada linea, por favor pruebe con otra cadena\n");
 		return 1;
 	}
-
 	/*
 		Prueba de paso de argumentos por línea de comandos
 	*/
@@ -86,6 +85,11 @@ int main(int  argc, char ** argv){
 	FILE* archivo = fopen(input_file, "r");
 	if(archivo == NULL) {
 		printf("El archivo %s no existe, ejecute el programa con un archivo existente\n", input_file);
+		return 1;
+	}
+	int caracteres_reales_en_linea = calcularCaracteresRealesEnLinea(archivo);
+	if (caracteres_reales_en_linea < cantidad_caracteres_en_linea){
+		printf("La cantidad de caracteres por línea a leer es mayor que el número de caracteres reales que contiene el archivo de entrada \"%s\"\n",input_file);
 		return 1;
 	}
 	char ch; int i;
