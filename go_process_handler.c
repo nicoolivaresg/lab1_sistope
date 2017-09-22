@@ -88,8 +88,8 @@ int main(int  argc, char ** argv){
 		return 1;
 	}
 	int caracteres_reales_en_linea = calcularCaracteresRealesEnLinea(archivo);
-	if (caracteres_reales_en_linea < cantidad_caracteres_en_linea){
-		printf("La cantidad de caracteres por línea a leer es mayor que el número de caracteres reales que contiene el archivo de entrada \"%s\"\n",input_file);
+	if (caracteres_reales_en_linea != cantidad_caracteres_en_linea){
+		printf("La cantidad de caracteres por línea a leer es distinta número real de caracteres que contiene el archivo de entrada \"%s\"\n",input_file);
 		return 1;
 	}
 	char ch; int i;
